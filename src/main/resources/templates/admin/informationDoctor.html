@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>List information Doctor</title>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <div class="jumbotron">
+        <div th:if="${not #lists.isEmpty(informationDoctorList)}">
+            <h2>List information Doctor</h2>
+            <table class="table table-striped">
+                <tr>
+                    <th>Id</th>
+                    <th>specialtyOfDoctor</th>
+                    <th>room</th>
+                </tr>
+                <tr th:each="informationDoctor : ${informationDoctorList}">
+                    <td th:text="${informationDoctor.id}">id</td>
+                    <td th:text="${informationDoctor.specialtyOfDoctor}">specialty Of Doctor</td>
+                    <td th:text="${informationDoctor.room}">room</td>
+                </tr>
+            </table>
+        </div>
+        <form th:object="${informationDoctor}" th:action="@{/admin/informationDoctor/add}">
+            <div>
+                <table class="table table-striped">
+                    <tr>
+                        <th>specialty Of Doctor</th>
+                        <th>room</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" th:name="specialtyOfDoctor" th:field="*{specialtyOfDoctor}"
+                                   placeholder="specialty" required="true"/></td>
+                        <td><input type="text" th:name="room" th:field="*{room}"
+                                   placeholder="№ room" required="true"/></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

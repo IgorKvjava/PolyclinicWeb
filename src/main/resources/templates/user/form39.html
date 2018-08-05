@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>Login</title>
+    <th:block th:include="fragments/headerinc :: head"></th:block>
+</head>
+<body>
+<div class="container">
+    <th:block th:include="fragments/header :: header"></th:block>
+    <div class="jumbotron">
+        <div >
+            <form  th:object="${form39}" th:action="@{'/user/form39/'+${UserId}}">
+                <div class="table-responsive">
+                <table class="table table-border">
+                    <tr>
+                        <th th:colspan="15"><img src="../../static/images/form39.jpg" width="100%"
+                                                 th:src="@{/images/form39.jpg}"/></th>
+                    </tr>
+                    <!--<tr>
+                        <th>A</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>6</th>
+                        <th>7</th>
+                        <th>8</th>
+                        <th>9</th>
+                        <th>10</th>
+                        <th>11</th>
+                        <th>12</th>
+                        <th>13</th>
+                        <th>14</th>
+                    </tr>-->
+                    <tr>
+                        <td><input size="3" type="text" th:name="numDay" th:readonly="numDay" th:field="*{numDay}"
+                                   placeholder="num" required="true" /></td>
+                        <td><input size="3" type="text"  th:name="numberVisi+tsAll" th:field="*{numberVisitsAll}"
+                                   placeholder="num" required="true" autofocus="true"/></td>
+                        <td><input size="3" type="text"  th:name="ofVillagers" th:field="*{ofVillagers}"
+                                   placeholder="num" required="true"/></td>
+                        <td><input size="3" type="text" th:name="childrenVisitsAll" th:field="*{childrenVisitsAll}"
+                                   placeholder="num" required="true"/></td>
+                        <td><input size="3" type="text"  th:name="childrenVisitsVillagers" th:field="*{childrenVisitsVillagers}"
+                                   placeholder="num" required="true"/></td>
+                        <td><input size="3" type="text"  th:name="adultsVisitsDisease" th:field="*{adultsVisitsDisease}"
+                                   placeholder="num" required="true"/></td>
+                        <td><input size="3" type="text"  th:name="adultsVisitsDiseaseVillagers" th:field="*{adultsVisitsDiseaseVillagers}"
+                                   placeholder="num" required="true"/></td>
+                        <td><input size="3" type="text"  th:name="childrenVisitsDisease" th:field="*{childrenVisitsDisease}"
+                                   placeholder="num" required="true"/></td>
+                        <td><input size="3" type="text"  th:name="childrenVisitsDiseaseVillagers"  th:field="*{childrenVisitsDiseaseVillagers}"
+                                   placeholder="num" required="true"/></td>
+                        <td><input size="3" type="text"  th:name="visitsHomeAll" th:field="*{visitsHomeAll}"
+                                   placeholder="visitsHomeAll" required="true"/></td>
+                        <td><input size="3" type="text"  th:name="visitsHomeVillagers" th:field="*{visitsHomeVillagers}"
+                                   placeholder="num" required="true"/></td>
+                        <td><input size="3" type="text"  th:name="childrenVisitsHomeAll" th:field="*{childrenVisitsHomeAll}"
+                                   placeholder="num" required="true"/></td>
+                        <td><input size="3" type="text"  th:name="childrenVisitsHomeVillagers" th:field="*{childrenVisitsHomeVillagers}"
+                                   placeholder="num" required="true"/></td>
+                        <td><input size="3" type="text"  th:name="childrenPatronage" th:field="*{childrenPatronage}"
+                                   placeholder="num" required="true"/></td>
+                        <td><input size="3" type="text"  th:name="childrenPatronageVillagers" th:field="*{childrenPatronageVillagers}"
+                                   placeholder="num" required="true"/></td>
+                        <!--<td>${listForm39Data.userByIdDoctor.fio}</td>
+                        <td>${listForm39Data.userByIdDoctor.specialtyDoctor}</td>-->
+                    </tr>
+                </table>
+                    <label>Дата заповнення форми:</label>
+                    <input size="10" type="date" th:name="dateNow" th:field="*{dateNow}"/>
+                    <br/>
+                </div>
+                <div class="row">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- can be named log4j2.xml too. When possible we recommend that you use the -spring  variant-->
+
+
+<!-- Log all SQL DML statements as they are executed -->
+<!--<Logger name="org.hibernate.SQL" level="debug" />-->
+<!-- Log all JDBC parameters -->
+<!--<Logger name="org.hibernate.type" level="debug" />-->
+<!-- Log all SQL DDL statements as they are executed -->
+<!--<Logger name="org.hibernate.tool.hbm2ddl" level="debug" />-->
+<!-- Log the state of all entities (max 20 entities) associated with the session at flush time -->
+<!--<Logger name="org.hibernate.pretty" level="debug" />-->
+<!-- Log all second-level cache activity -->
+<!--<Logger name="org.hibernate.cache" level="debug" />-->
+<!-- Log transaction related activity -->
+<!--<Logger name="org.hibernate.transaction" level="debug" />-->
+<!-- Log all JDBC resource acquisition -->
+<!--<Logger name="org.hibernate.jdbc" level="debug" />-->
+<!-- Log HQL and SQL ASTs during query parsing -->
+<!--<Logger name="org.hibernate.hql.ast.AST" level="debug" />-->
+<!-- Log all JAAS authorization requests -->
+<!--<Logger name="org.hibernate.secure" level="debug" />-->
+<!-- Log everything (a lot of information, but very useful for troubleshooting) -->
+<!--<Logger name="org.hibernate" level="debug" />-->
+
+
+<Configuration>
+    <!-- Properties section -->
+    <Properties>
+        <Property name="web_log">../logs/web.log</Property>
+        <Property name="core_log">../logs/core.log</Property>
+        <Property name="model_log">../logs/model.log</Property>
+        <Property name="hibernate_log">../logs/hibernate.log</Property>
+    </Properties>
+
+    <!-- Appenders section -->
+    <Appenders>
+        <!-- console appender -->
+        <Console name="console_file" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="[%highlight{%5p}] %d{HH:mm:ss.SSS} [%t] %logger{36} -  %msg%n"/>
+        </Console>
+
+        <!-- File appender of web log -->
+        <RollingFile name="web_file" fileName="${web_log}"
+                     filePattern="logs/arch/arch_web_log-%d{MM-dd-yyyy_HH}-%i.gz">
+            <PatternLayout>
+                <Pattern>%d [%marker] %p %c{1.} [%t] %m %ex%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="2000000"/>
+            </Policies>
+        </RollingFile>
+
+        <!-- File appender of core log -->
+        <RollingFile name="core_file" fileName="${core_log}"
+                     filePattern="logs/arch/arch_core_log-%d{MM-dd-yyyy_HH}-%i.gz">
+            <PatternLayout>
+                <Pattern>%d [%marker] %p %c{1.} [%t] %m %ex%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="2000000"/>
+            </Policies>
+        </RollingFile>
+
+        <!-- File appender of model log -->
+        <RollingFile name="model_file" fileName="${model_log}"
+                     filePattern="logs/arch/arch_model_log-%d{MM-dd-yyyy_HH}-%i.gz">
+            <PatternLayout>
+                <Pattern>%d [%marker] %p %c{1.} [%t] %m %ex%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="2000000"/>
+            </Policies>
+        </RollingFile>
+        <!-- File appender of hibernate log -->
+        <RollingFile name="hibernate_file" fileName="${hibernate_log}"
+                     filePattern="logs/arch/arch_model_log-%d{MM-dd-yyyy_HH}-%i.gz">
+            <PatternLayout>
+                <Pattern>%d [%marker] %p %c{1.} [%t] %m %ex%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="2000000"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <!-- Loggers section -->
+    <Loggers>
+
+        <!-- web logger -->
+        <Logger name="ua.kvelinskyi.loggers.web">
+            <!--additivity="false">-->
+           <!-- <AppenderRef ref="SpringBoot-File-Appender"/>
+            <AppenderRef ref="Console-Appender"/>-->
+            <AppenderRef ref="web_file" level="ALL"/>
+        </Logger>
+
+        <!-- core logger -->
+        <Logger name="ua.kvelinskyi.loggers.core" level="ALL">
+            <!--additivity="false">-->
+            <AppenderRef ref="core_file" level="ALL"/>
+        </Logger>
+
+        <!-- model logger -->
+        <Logger name="ua.kvelinskyi.loggers.model" level="ALL">
+            <!--additivity="false">-->
+            <AppenderRef ref="model_file" level="ALL"/>
+        </Logger>
+
+        <!-- Log everything (a lot of information, but very useful for troubleshooting) -->
+        <Logger name="org.hibernate.SQL" level="DEBUG">
+            <AppenderRef ref="hibernate_file" level="DEBUG"/>
+        </Logger>
+        <!-- Root logger -->
+
+        <Root level="INFO">
+            <AppenderRef ref="console_file"/>
+        </Root>
+
+    </Loggers>
+
+</Configuration>

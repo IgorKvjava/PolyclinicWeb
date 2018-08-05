@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../../static/css/bootstrap.min.css"
+          th:href="@{/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+    <script src="../../static/js/jquery.min.js"
+            th:src="@{/js/jquery.min.js}"></script>
+    <link href="../../static/css/guru.css"
+          th:href="@{/css/guru.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+<div class="container">
+    <div th:fragment="header">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#" th:href="@{/index}">Головна</a>
+                    <ul class="nav navbar-nav">
+                        <li><a href="#" th:href="@{/loginPage}" sec:authorize="isAnonymous()">Вхід</a></li>
+                        <li><a href="#" th:href="@{/signUp}" sec:authorize="isAnonymous()">Реєстрація</a></li>
+                        <li><a href="#" th:href="@{/admin/usersEditData}" sec:authorize="hasRole('ROLE_ADMIN')">Редагувати
+                            користовачів</a></li>
+                        <li><a href="#" th:href="@{/admin/form39Admin}" sec:authorize="hasRole('ROLE_ADMIN')">Огляд Форми №39</a></li>
+                        <li><a href="#" th:href="@{/admin/informationDoctor}" sec:authorize="hasRole('ROLE_ADMIN')">Редагувати інформацію про лікарів</a></li>
+                        <li><a href="#" th:href="@{/user/form39}" sec:authorize="hasRole('ROLE_USER')">Заповнити Форму №39</a></li>
+                        <li><a href="#" th:href="@{/user/form39Data}" sec:authorize="hasRole('ROLE_USER')">Огляд Форми №39</a></li>
+                        <li><a href="#" th:href="@{/infoPage}"> Контактна інформація</a></li>
+                        <li><a href="#" th:href="@{/logout}" sec:authorize="isAuthenticated()">Вихід</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="welcome">
+            <span sec:authorize="isAuthenticated()">Ласкаво просимо : <span sec:authentication="name"></span></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
