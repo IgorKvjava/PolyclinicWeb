@@ -29,7 +29,7 @@ public class LoginController {
     @RequestMapping(value = "/")
     public ModelAndView getIndexSlash() {
         ModelAndView modelAndView = new ModelAndView();
-        log.info("class LoginServlet -IndexController(/) has started !");
+        log.info("class LoginController -IndexController(/) has started !");
         modelAndView.setViewName("index");
         return modelAndView;
     }
@@ -62,6 +62,14 @@ public class LoginController {
     public ModelAndView getInfoPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("info");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/schedule", method = RequestMethod.GET)
+    public ModelAndView getSchedulePage() {
+        ModelAndView modelAndView = new ModelAndView();
+        log.info("class LoginController - /schedule has started !");
+        modelAndView.setViewName("schedule");
         return modelAndView;
     }
 
