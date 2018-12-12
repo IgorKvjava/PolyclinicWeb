@@ -86,12 +86,14 @@ public class LoginController {
             log.info("class LoginController - registration Login isExist");
             mod.setViewName("registration");
         } else {
+            //create new user
             User user = new User();
             user.setLogin(login);
             String cryptedPassword = new BCryptPasswordEncoder().encode(password);
             user.setPassword(cryptedPassword);
             user.setEnabled("true");
-            user.setRole(2);
+            //role a patient -3, doctor -2 , admin -1
+            user.setRole(3);
             user.setUserName("enter your name");
             user = userServiceImpl.addUser(user);
             log.info("class LoginController - registration new user"+user.getUserName());

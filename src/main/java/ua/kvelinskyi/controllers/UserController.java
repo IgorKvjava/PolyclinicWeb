@@ -27,15 +27,12 @@ public class UserController {
     public void setLog(Logger log) {
         this.log = log;
     }
-
     @Autowired
     UserServiceImpl userServiceImpl;
     @Autowired
     Form39ServiceImpl form39ServiceImpl;
-
     @Autowired
     ControllerHelper controllerHelper;
-
     private Integer dayOfDate (java.sql.Date date){
         String datePars = date.toString();
         String[] stringList = datePars.split("-");

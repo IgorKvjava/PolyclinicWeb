@@ -28,6 +28,7 @@
                         <li><a href="#" th:href="@{/admin/informationDoctor}" sec:authorize="hasRole('ROLE_ADMIN')">Редагувати інформацію про лікарів</a></li>
                         <li><a href="#" th:href="@{/user/form39}" sec:authorize="hasRole('ROLE_USER')">Заповнити Форму №39</a></li>
                         <li><a href="#" th:href="@{/user/form39Data}" sec:authorize="hasRole('ROLE_USER')">Огляд Форми №39</a></li>
+                        <li><a href="#" th:href="@{/patient/medicalRecord}" sec:authorize="hasRole('ROLE_PATIENT')">Медична карта</a></li>
                         <li><a href="#" th:href="@{/infoPage}"> Контактна інформація</a></li>
                         <li><a href="#" th:href="@{/logout}" sec:authorize="isAuthenticated()">Вихід</a></li>
                     </ul>
