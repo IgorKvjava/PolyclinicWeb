@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,7 +58,23 @@ public class AdminController {
         //user.setPassword(pass);
         //import java.util.Base64;
         model.addAttribute("user", user);
-        return "/user/userEditDataPage";
+        return "/admin/userEditDataPage";
+    }
+
+    @RequestMapping(value = "/admin/userUpdateData")
+    public ModelAndView doUserEditData(@RequestParam("userName") String userName,
+                                       @Validated
+                                               User user) {
+        ModelAndView mod = new ModelAndView();
+        log.info("class AdminController - doUserEditData,  user id = " + user.getId());
+        User userNew = userServiceImpl.getUserById(user.getId());
+        userNew.setUserName(userName);
+        log.info(user);
+        log.info(userNew);
+        userNew = userServiceImpl.editUser(userNew);
+        mod.addObject("user", userNew);
+        mod.setViewName("/admin/userEditDataPage");
+        return mod;
     }
 
     @RequestMapping(value = "/admin/usersEditData")

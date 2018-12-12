@@ -124,23 +124,6 @@ public class LoginController {
         return mod;
     }
 
-    @RequestMapping(value = "/userUpdateData")
-    public ModelAndView doUserEditData(@RequestParam("userName") String userName,
-                                       @Validated
-                                               User user) {
-        ModelAndView mod = new ModelAndView();
-       /* if (!password.equals("0")){
-            String cryptedPassword = new BCryptPasswordEncoder().encode(password);
-            user.setPassword(cryptedPassword);
-        }*/
-        log.info("class LoginController - doUserEditData,  user id = " + user.getId());
-        user.setUserName(userName);
-        user = userServiceImpl.editUser(user);
-        mod.addObject("user", user);
-        mod.setViewName("/user/userEditDataPage");
-        return mod;
-    }
-
     // for 403 access denied page
     @RequestMapping(value = "/accessDenied", method = RequestMethod.GET)
     public ModelAndView accessDenied(Principal user) {

@@ -5,7 +5,7 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "form39", schema = "phonebase")
+@Table(name = "form39", schema = "polyclinicbase")
 public class Form39 {
     private int id;
     private int idDoctor;

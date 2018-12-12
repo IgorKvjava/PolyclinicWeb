@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "users", schema = "phonebase")
+@Table(name = "users", schema = "polyclinicbase")
 public class User {
     private int id;
     private String login;
@@ -102,6 +102,10 @@ public class User {
         return phoneBookList;
     }
 
+    public void setPhoneBookList(List<PhoneBook> phoneBookList) {
+        this.phoneBookList = phoneBookList;
+    }
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     public List<Form39> getForm39List() {
         return form39List;
@@ -111,11 +115,7 @@ public class User {
         this.form39List = form39List;
     }
 
-    public void setPhoneBookList(List<PhoneBook> phoneBookList) {
-        this.phoneBookList = phoneBookList;
-    }
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "information_doctor_id")
     public InformationDoctor getInformationDoctor() {
         return informationDoctor;

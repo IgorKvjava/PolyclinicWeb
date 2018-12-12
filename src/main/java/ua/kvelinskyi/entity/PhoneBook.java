@@ -3,7 +3,7 @@ package ua.kvelinskyi.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "phone_books", schema = "phonebase")
+@Table(name = "phone_books", schema = "polyclinicbase")
 public class PhoneBook {
     private int id;
     private int idUser;
