@@ -1,5 +1,6 @@
 package ua.kvelinskyi.service.impl;
 
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.kvelinskyi.entity.Form39;
@@ -13,6 +14,12 @@ import java.util.List;
 public class Form39ServiceImpl implements Form39Service {
     @Autowired
     Form39Repository form39Repository;
+    private Logger log;
+    //TODO Autowired Logger
+    @Autowired
+    public void setLog(Logger log) {
+        this.log = log;
+    }
 
     @Override
     public Form39 addForm39(Form39 form39) {
@@ -26,6 +33,7 @@ public class Form39ServiceImpl implements Form39Service {
 
     @Override
     public List<Form39> dataForm39ByTimeIntervalAndIdDoc(Date dateStart, Date dateEnd, Integer idDoc) {
+        log.info("class Form39ServiceImpl - dateStart = " + dateStart +" dateEnd = " + dateEnd);
         return form39Repository.findByDateNowBetweenAndIdDoctorOrderByNumDay(dateStart, dateEnd, idDoc);
     }
 

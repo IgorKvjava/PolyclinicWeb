@@ -106,15 +106,15 @@ public class UserController {
                                                      @RequestParam("dateStart") java.sql.Date dateStart,
                                                      @RequestParam("dateEnd") java.sql.Date dateEnd){
         List<Integer> id = userServiceImpl.getUserIdByLogin(loggedUser.getName());
-        ModelAndView mod = new ModelAndView();
+//        ModelAndView mod = new ModelAndView();
         List<Form39> listForm39 = form39ServiceImpl.dataForm39ByTimeIntervalAndIdDoc(dateStart,
                 dateEnd, id.get(0));
-        mod.addObject("sumForms39", controllerHelper.sumForms39Entity(listForm39));
+        /*mod.addObject("sumForms39", controllerHelper.sumForms39Entity(listForm39));
         mod.addObject("form39List", listForm39);
         mod.addObject("dateStart", dateStart);
         mod.addObject("dateEnd", dateEnd);
-        mod.setViewName("/user/form39Data");
-        return mod;
+        mod.setViewName("/user/form39Data");*/
+        return controllerHelper.modelForPageForm39(listForm39, dateStart, dateEnd, "/user/form39Data");
     }
 
     //TODO generate  ERROR PAGE 500

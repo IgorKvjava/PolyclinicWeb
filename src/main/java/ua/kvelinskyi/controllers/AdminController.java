@@ -105,51 +105,87 @@ public class AdminController {
     @RequestMapping("/admin/informationDoctor")
     public ModelAndView doSpecialtyOfDoctor() {
         log.info("class AdminController - edit Specialty Of Doctor");
-        ModelAndView mod = new ModelAndView();
+        /*ModelAndView mod = new ModelAndView();
         List<InformationDoctor> informationDoctorList = informationDoctorServiceImpl.getAll();
         InformationDoctor informationDoctor = new InformationDoctor();
         mod.addObject("informationDoctor", informationDoctor);
         mod.addObject("informationDoctorList", informationDoctorList);
-        mod.setViewName("/admin/informationDoctor");
-        return mod;
+        mod.setViewName("/admin/informationDoctor");*/
+        return formInformationDoctor("/admin/informationDoctor");
     }
 
     @RequestMapping("/admin/informationDoctor/add")
     public ModelAndView doAddSpecialtyOfDoctor(InformationDoctor newInformationDoctor) {
         log.info("class AdminController - add Specialty Of Doctor");
-        ModelAndView mod = new ModelAndView();
+//        ModelAndView mod = new ModelAndView();
         informationDoctorServiceImpl.addInformationDoctor(newInformationDoctor);
+        /*List<InformationDoctor> informationDoctorList = informationDoctorServiceImpl.getAll();
+        InformationDoctor informationDoctor = new InformationDoctor();
+        mod.addObject("informationDoctor", informationDoctor);
+        mod.addObject("informationDoctorList", informationDoctorList);
+        mod.setViewName("/admin/informationDoctor");*/
+        return formInformationDoctor("/admin/informationDoctor");
+    }
+
+    private ModelAndView formInformationDoctor(String url){
+        ModelAndView mod = new ModelAndView();
         List<InformationDoctor> informationDoctorList = informationDoctorServiceImpl.getAll();
         InformationDoctor informationDoctor = new InformationDoctor();
         mod.addObject("informationDoctor", informationDoctor);
         mod.addObject("informationDoctorList", informationDoctorList);
-        mod.setViewName("/admin/informationDoctor");
+        mod.setViewName(url);
         return mod;
     }
 
     @RequestMapping("/admin/form39Admin")
     public ModelAndView doForm39() {
         log.info("class AdminController - page form-39 ");
+        /*Date curTime = new Date();
+        java.sql.Date currentDate = new java.sql.Date(curTime.getTime());
+        ModelAndView mod = new ModelAndView();
+        mod.addObject("dateStart", currentDate);
+        mod.addObject("dateEnd", currentDate);
+        mod.setViewName("/admin/form39Admin");*/
+        return formDateStartEnd("/admin/form39Admin");
+    }
+
+    @RequestMapping("/admin/form2100Admin")
+    public ModelAndView doForm2100() {
+        log.info("class AdminController - page form-2100 ");
+        return formDateStartEnd("/admin/form2100Admin");
+    }
+
+    private ModelAndView formDateStartEnd(String url){
         Date curTime = new Date();
         java.sql.Date currentDate = new java.sql.Date(curTime.getTime());
         ModelAndView mod = new ModelAndView();
         mod.addObject("dateStart", currentDate);
         mod.addObject("dateEnd", currentDate);
-        mod.setViewName("/admin/form39Admin");
+        mod.setViewName(url);
         return mod;
     }
+
     @RequestMapping("/admin/form39Data/timeInterval")
     public ModelAndView doViewForm39DataOfAllDoctor(@RequestParam("dateStart") java.sql.Date dateStart,
                                                     @RequestParam("dateEnd") java.sql.Date dateEnd)
     {
         log.info("class AdminController - View Form39 Data Of All Doctor");
-        ModelAndView mod = new ModelAndView();
         List<Form39> listForm39 = form39ServiceImpl.dataForm39ByTimeInterval(dateStart, dateEnd);
-        mod.addObject("sumForms39", controllerHelper.sumForms39Entity(listForm39));
-        mod.addObject("form39List", listForm39);
+        return controllerHelper.modelForPageForm39(listForm39, dateStart, dateEnd, "/admin/form39Admin");
+    }
+
+    @RequestMapping("/admin/form2100Data/timeInterval")
+    public ModelAndView doViewForm2100DataOfAllDoctor(@RequestParam("dateStart") java.sql.Date dateStart,
+                                                    @RequestParam("dateEnd") java.sql.Date dateEnd)
+    {
+        log.info("class AdminController - View Form39 Data Of All Doctor");
+        ModelAndView mod = new ModelAndView();
+        List<Form39> listForm2100 = form39ServiceImpl.dataForm39ByTimeInterval(dateStart, dateEnd);
+        log.info("class AdminController listForm2100 = " + listForm2100);
+        mod.addObject("sumForms2100", controllerHelper.sumForms2100Entity(listForm2100));
         mod.addObject("dateStart", dateStart);
         mod.addObject("dateEnd", dateEnd);
-        mod.setViewName("/admin/form39Admin");
+        mod.setViewName("/admin/form2100Admin");
         return mod;
     }
 
