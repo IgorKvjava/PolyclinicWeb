@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>Form 2100 view</title>
+    <th:block th:include="fragments/headerinc :: head"></th:block>
+</head>
+<body>
+<div class="container">
+    <th:block th:include="fragments/header :: header"></th:block>
+    <div class="jumbotron">
+        <div th:if="${not #lists.isEmpty(sumForms21001)}">
+            <h2>Таблиця 2100/1</h2>
+            <div class="table-responsive">
+                <table class="table table-border" title="Таблиця 2100/1">
+                    <tr bgcolor="#A9A9A9">
+                        <th class="eventh"></th>
+                        <th class="eventh"></th>
+                        <th class="eventh"></th>
+                        <th class="eventh"></th>
+                        <th class="eventh" colspan="2">Кількість відвідувань з <br/>приводу захворювань (із графи 1)</th>
+                        <th class="eventh" colspan="3">Кількість відвідувань лікарями хворих <br/>удома</th>
+                    </tr>
+                    <tr bgcolor="#A9A9A9">
+                        <th class="eventh">
+                            <div>Найменування посад</div>
+                        </th>
+                        <th class="eventh">
+                            <div class="vert-text">Номер рядка</div>
+                        </th>
+                        <th class="eventh">
+                            <div class="vert-text">Кількість відвідувань лікарів <br/>включно з профілак-тичними- усього</div>
+                        </th>
+                        <th class="eventh">
+                            <div class="vert-text">у тому числі сільських жителів</div>
+                        </th>
+                        <th class="eventh">
+                            <div class="vert-text">дорослими 18 років і старше</div>
+                        </th>
+                        <th class="eventh">
+                            <div class="vert-text">дітьми віком 0-17 років включно</div>
+                        </th>
+                        <th class="eventh">
+                            <div class="vert-text">всього</div>
+                        </th>
+                        <th class="eventh">
+                            <div class="vert-text">з приводу захворю-вань дітей <br/>віком 0-17 років включно</div>
+                        </th>
+                        <th class="eventh">
+                            <div class="vert-text">профілак-тичних і патронажних<br/>(0-17 років включно)</div>
+                        </th>
+                    </tr>
+                    <tr bgcolor="#A9A9A9">
+                        <th class="eventh">A</th>
+                        <th class="eventh">B</th>
+                        <th class="eventh">1</th>
+                        <th class="eventh">2</th>
+                        <th class="eventh">3</th>
+                        <th class="eventh">4</th>
+                        <th class="eventh">5</th>
+                        <th class="eventh">6</th>
+                        <th class="eventh">7</th>
+                    </tr>
+                    <div th:if="${sumForms21001} != null">
+                        <tr class="even">
+                            <td class="eventh">Лікарі усього</td>
+                            <td th:text="1"></td>
+                            <td th:text="${sumForms21001.numberVisitsAll}"></td>
+                            <td th:text="${sumForms21001.ofVillagers}"></td>
+                            <td th:text="${sumForms21001.adultsVisitsDisease}"></td>
+                            <td th:text="${sumForms21001.childrenVisitsDisease}"></td>
+                            <td th:text="${sumForms21001.visitsHomeAll}"></td>
+                            <td th:text="${sumForms21001.childrenVisitsHomeAll}"></td>
+                            <td th:text="${sumForms21001.childrenPatronage}"></td>
+                        </tr>
+                    </div>
+                </table>
+            </div>
+        </div>
+        <form th:action="@{/admin/form21001Data/timeInterval}">
+            <div>
+                <table class="table1">
+                    <caption>Виберіть період відображення даних</caption>
+                    <tr>
+                        <th style="width: 30px;">Дата початку:</th>
+                        <th style="width: 30px;">Дата кінця:</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input size="30" type="date" th:name="dateStart" th:value="${dateStart}"/>
+                        </td>
+                        <td>
+                            <input size="30" type="date" th:name="dateEnd" th:value="${dateEnd}"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <br/>
+            <div class="row">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

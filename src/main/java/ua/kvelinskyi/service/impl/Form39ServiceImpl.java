@@ -15,7 +15,6 @@ public class Form39ServiceImpl implements Form39Service {
     @Autowired
     Form39Repository form39Repository;
     private Logger log;
-    //TODO Autowired Logger
     @Autowired
     public void setLog(Logger log) {
         this.log = log;

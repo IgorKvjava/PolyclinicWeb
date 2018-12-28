@@ -3,20 +3,21 @@ package ua.kvelinskyi.controllers;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ua.kvelinskyi.entity.InformationDoctor;
 import ua.kvelinskyi.entity.User;
+import ua.kvelinskyi.service.impl.InformationDoctorServiceImpl;
 import ua.kvelinskyi.service.impl.UserServiceImpl;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 public class LoginController {
 
     private Logger log;
-    //TODO Autowired log
     @Autowired
     public void setLog(Logger log) {
         this.log = log;
@@ -25,6 +26,8 @@ public class LoginController {
     FormValidator formValidator;
     @Autowired
     UserServiceImpl userServiceImpl;
+    @Autowired
+    InformationDoctorServiceImpl informationDoctorServiceImpl;
 
     @RequestMapping(value = "/")
     public ModelAndView getIndexSlash() {
@@ -37,7 +40,7 @@ public class LoginController {
     @RequestMapping(value = "/index")
     public ModelAndView getIndex() {
         ModelAndView modelAndView = new ModelAndView();
-        log.info("class LoginServlet - IndexController(/index) has started !");
+        log.info("class LoginController - IndexController(/index) has started !");
         modelAndView.setViewName("index");
         return modelAndView;
     }
@@ -46,6 +49,7 @@ public class LoginController {
     public ModelAndView getLogin() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("loginPage");
+        log.info("class LoginController - IndexController /loginPage has started !");
         return modelAndView;
     }
 
@@ -62,6 +66,7 @@ public class LoginController {
     public ModelAndView getInfoPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("info");
+        log.info("class LoginController - IndexController /info has started !");
         return modelAndView;
     }
 
@@ -75,18 +80,20 @@ public class LoginController {
 
     @RequestMapping(value = "/signUp", method = RequestMethod.GET)
     public ModelAndView getRegistrationPage() {
-       // User user = new User();
         ModelAndView modelAndView = new ModelAndView();
-        log.info("class LoginServlet - signUp has started !");
         modelAndView.setViewName("registration");
-       // modelAndView.addObject("user", user);
+        List<InformationDoctor> informationDoctorList = informationDoctorServiceImpl.getAll();
+        informationDoctorList.remove(0);
+        modelAndView.addObject("informationDoctorList", informationDoctorList);
+        log.info("class LoginController - signUp has started !");
         return modelAndView;
     }
 
     //TODO change registration
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ModelAndView doRegistrationUser(@RequestParam("login") String login,
-                                           @RequestParam("password") String password)
+                                           @RequestParam("password") String password,
+                                           @RequestParam("id") Integer informationDoctorID)
     {
         log.info("public class LoginController -- registration");
         ModelAndView mod = new ModelAndView();
@@ -101,8 +108,11 @@ public class LoginController {
             user.setEnabled("true");
             user.setRole(2);
             user.setUserName("enter your name");
+            InformationDoctor informationDoctor = informationDoctorServiceImpl.getById(informationDoctorID);
+            log.info("class LoginController - information Doctor Id : " + informationDoctor.getId());
+            user.setInformationDoctor(informationDoctor);
             user = userServiceImpl.addUser(user);
-            log.info("class LoginController - registration new user"+user.getUserName());
+            log.info("class LoginController - registration new user" + user.getUserName());
             if(user!=null){
                 mod.setViewName("index");
             }else {

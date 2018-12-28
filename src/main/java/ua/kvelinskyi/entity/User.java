@@ -3,6 +3,7 @@ package ua.kvelinskyi.entity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users", schema = "polyclinicbase")
@@ -133,8 +134,10 @@ public class User {
                 ", password='" + password + '\'' +
                 ", userName='" + userName + '\'' +
                 ", enabled='" + enabled + '\'' +
-                ", phoneBookList=" + phoneBookList +
                 ", form39List=" + form39List +
+                ", phoneBookList=" + phoneBookList +
+                ", role=" + role +
+                ", informationDoctor=" + informationDoctor +
                 '}';
     }
 
@@ -142,28 +145,20 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        User that = (User) o;
-
-        if (id != that.id) return false;
-        if (login != null ? !login.equals(that.login) : that.login != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (userName != null ? !userName.equals(that.userName) : that.userName != null) return false;
-        if (enabled != null ? !enabled.equals(that.enabled) : that.enabled != null) return false;
-        if (role != that.role) return false;
-        return true;
+        User user = (User) o;
+        return id == user.id &&
+                role == user.role &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(userName, user.userName) &&
+                Objects.equals(enabled, user.enabled) &&
+                Objects.equals(form39List, user.form39List) &&
+                Objects.equals(phoneBookList, user.phoneBookList) &&
+                Objects.equals(informationDoctor, user.informationDoctor);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (login != null ? login.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (userName != null ? userName.hashCode() : 0);
-        result = 31 * result + (enabled != null ? enabled.hashCode() : 0);
-        result = 31 * result + role;
-        return result;
+        return Objects.hash(id, login, password, userName, enabled, form39List, phoneBookList, role, informationDoctor);
     }
-
-
 }

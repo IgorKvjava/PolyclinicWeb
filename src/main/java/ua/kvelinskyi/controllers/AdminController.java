@@ -23,6 +23,7 @@ import java.util.List;
 public class AdminController {
 
     private Logger log;
+
     //TODO Autowired Logger
     @Autowired
     public void setLog(Logger log) {
@@ -41,20 +42,20 @@ public class AdminController {
     @Autowired
     ControllerHelper controllerHelper;
 
-    private Integer dayOfDate (java.sql.Date date){
+    private Integer dayOfDate(java.sql.Date date) {
         String datePars = date.toString();
         String[] stringList = datePars.split("-");
         return Integer.parseInt(stringList[2]);
     }
 
     @RequestMapping("/admin/user/edit/{id}")
-    public String edit(@PathVariable Integer id, Model model){
-        log.info("class AdminController - edit user id= "+id );
+    public String edit(@PathVariable Integer id, Model model) {
+        log.info("class AdminController - edit user id= " + id);
         User user = userServiceImpl.getUserById(id);
-       // String pass = user.getPassword();
-       // byte[] decodedBytes = Base64.getDecoder().decode(pass);
-      //  pass = new String(decodedBytes);
-       // pass = new String(Base64.decodeBase64(pass.getBytes()));
+        // String pass = user.getPassword();
+        // byte[] decodedBytes = Base64.getDecoder().decode(pass);
+        //  pass = new String(decodedBytes);
+        // pass = new String(Base64.decodeBase64(pass.getBytes()));
         //user.setPassword(pass);
         //import java.util.Base64;
         model.addAttribute("user", user);
@@ -88,17 +89,20 @@ public class AdminController {
     }
 
     @RequestMapping("/admin/user/onOff/{id}")
-    public String doOnOffUser(@PathVariable Integer id, Model model){
+    public String doOnOffUser(@PathVariable Integer id, Model model) {
         User user = userServiceImpl.getUserById(id);
-        if(user.getEnabled().equals("true")){
-            user.setEnabled("false");
-            log.info("class AdminController - disable user id= "+id);
-        }else {
+
+        if (user.getEnabled().equals("true")) {
+            if (user.getRole() != 11) {
+                user.setEnabled("false");
+                log.info("class AdminController - disable user id= " + id);
+            }
+        } else {
             user.setEnabled("true");
-            log.info("class AdminController - enable user id= "+id);
+            log.info("class AdminController - enable user id= " + id);
         }
         userServiceImpl.editUser(user);
-        model.addAttribute("listAllUsers",userServiceImpl.getAll());
+        model.addAttribute("listAllUsers", userServiceImpl.getAll());
         return "/admin/usersEditData";
     }
 
@@ -127,7 +131,7 @@ public class AdminController {
         return formInformationDoctor("/admin/informationDoctor");
     }
 
-    private ModelAndView formInformationDoctor(String url){
+    private ModelAndView formInformationDoctor(String url) {
         ModelAndView mod = new ModelAndView();
         List<InformationDoctor> informationDoctorList = informationDoctorServiceImpl.getAll();
         InformationDoctor informationDoctor = new InformationDoctor();
@@ -155,7 +159,13 @@ public class AdminController {
         return formDateStartEnd("/admin/form2100Admin");
     }
 
-    private ModelAndView formDateStartEnd(String url){
+    @RequestMapping("/admin/form21001Admin")
+    public ModelAndView doForm21001() {
+        log.info("class AdminController - page form-2100/1 ");
+        return formDateStartEnd("/admin/form21001Admin");
+    }
+
+    private ModelAndView formDateStartEnd(String url) {
         Date curTime = new Date();
         java.sql.Date currentDate = new java.sql.Date(curTime.getTime());
         ModelAndView mod = new ModelAndView();
@@ -167,8 +177,7 @@ public class AdminController {
 
     @RequestMapping("/admin/form39Data/timeInterval")
     public ModelAndView doViewForm39DataOfAllDoctor(@RequestParam("dateStart") java.sql.Date dateStart,
-                                                    @RequestParam("dateEnd") java.sql.Date dateEnd)
-    {
+                                                    @RequestParam("dateEnd") java.sql.Date dateEnd) {
         log.info("class AdminController - View Form39 Data Of All Doctor");
         List<Form39> listForm39 = form39ServiceImpl.dataForm39ByTimeInterval(dateStart, dateEnd);
         return controllerHelper.modelForPageForm39(listForm39, dateStart, dateEnd, "/admin/form39Admin");
@@ -176,9 +185,8 @@ public class AdminController {
 
     @RequestMapping("/admin/form2100Data/timeInterval")
     public ModelAndView doViewForm2100DataOfAllDoctor(@RequestParam("dateStart") java.sql.Date dateStart,
-                                                    @RequestParam("dateEnd") java.sql.Date dateEnd)
-    {
-        log.info("class AdminController - View Form39 Data Of All Doctor");
+                                                      @RequestParam("dateEnd") java.sql.Date dateEnd) {
+        log.info("class AdminController - View Form2100 Data Of All Doctor");
         ModelAndView mod = new ModelAndView();
         List<Form39> listForm2100 = form39ServiceImpl.dataForm39ByTimeInterval(dateStart, dateEnd);
         log.info("class AdminController listForm2100 = " + listForm2100);
@@ -186,6 +194,20 @@ public class AdminController {
         mod.addObject("dateStart", dateStart);
         mod.addObject("dateEnd", dateEnd);
         mod.setViewName("/admin/form2100Admin");
+        return mod;
+    }
+
+    @RequestMapping("/admin/form21001Data/timeInterval")
+    public ModelAndView doViewForm21001DataOfAllDoctor(@RequestParam("dateStart") java.sql.Date dateStart,
+                                                       @RequestParam("dateEnd") java.sql.Date dateEnd) {
+        log.info("class AdminController - View Form2100/1 Data Of All Doctor");
+        ModelAndView mod = new ModelAndView();
+        List<Form39> listForm21001 = form39ServiceImpl.dataForm39ByTimeInterval(dateStart, dateEnd);
+        log.info("class AdminController listForm21001 = " + listForm21001);
+        mod.addObject("sumForms21001", controllerHelper.sumForms2100Entity(listForm21001));
+        mod.addObject("dateStart", dateStart);
+        mod.addObject("dateEnd", dateEnd);
+        mod.setViewName("/admin/form21001Admin");
         return mod;
     }
 

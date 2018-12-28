@@ -30,5 +30,10 @@ public class InformationDoctorServiceImpl implements InformationDoctorService{
         return informationDoctorRepository.saveAndFlush(informationDoctor);
     }
 
+    @Override
+    public InformationDoctor getById(Integer informationDoctorID) {
+        return informationDoctorRepository.findOne(informationDoctorID);
+    }
+
 
 }
