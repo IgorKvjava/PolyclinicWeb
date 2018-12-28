@@ -21,9 +21,9 @@
                     <a class="navbar-brand" href="#" th:href="@{/index}">Головна</a>
                     <ul class="nav navbar-nav">
                         <li><a href="#" th:href="@{/loginPage}" sec:authorize="isAnonymous()">Вхід</a></li>
-                        <li><a href="#" th:href="@{/signUp}" sec:authorize="isAnonymous()">Реєстрація</a></li>
+                        <li><a href="#" th:href="@{/admin/signUp}" sec:authorize="hasRole('ROLE_ADMIN')">Реєстрація</a></li>
                         <li><a href="#" th:href="@{/admin/usersEditData}" sec:authorize="hasRole('ROLE_ADMIN')">Редагувати користовачів</a></li>
-                        <li><a href="#" th:href="@{/admin/informationDoctor}" sec:authorize="hasRole('ROLE_ADMIN')">Редагувати інформацію про лікарів</a></li>
+                        <li><a href="#" th:href="@{/admin/informationDoctor}" sec:authorize="hasRole('ROLE_ADMIN')">Редагувати спеціальність лікарів</a></li>
                         <li><a href="#" th:href="@{/admin/form39Admin}" sec:authorize="hasRole('ROLE_ADMIN')">Огляд Форми №39</a></li>
                         <li><a href="#" th:href="@{/admin/form2100Admin}" sec:authorize="hasRole('ROLE_ADMIN')">Огляд Таблиці 2100</a></li>
                         <li><a href="#" th:href="@{/admin/form21001Admin}" sec:authorize="hasRole('ROLE_ADMIN')">Огляд Таблиці 2100/1</a></li>

@@ -27,10 +27,10 @@
 <Configuration>
     <!-- Properties section -->
     <Properties>
-        <Property name="web_log">../logs/web.log</Property>
-        <Property name="core_log">../logs/core.log</Property>
-        <Property name="model_log">../logs/model.log</Property>
-        <Property name="hibernate_log">../logs/hibernate.log</Property>
+        <Property name="web_log">c:/Users/igorjava/IdeaProjects/PolyclinicWeb/logs/web.log</Property>
+        <Property name="core_log">c:/Users/igorjava/IdeaProjects/PolyclinicWeb/logs/core.log</Property>
+        <Property name="model_log">c:/Users/igorjava/IdeaProjects/PolyclinicWeb/logs/model.log</Property>
+        <Property name="hibernate_log">c:/Users/igorjava/IdeaProjects/PolyclinicWeb/logs/hibernate.log</Property>
     </Properties>
 
     <!-- Appenders section -->

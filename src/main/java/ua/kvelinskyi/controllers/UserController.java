@@ -21,8 +21,6 @@ import java.util.List;
 @Controller
 public class UserController {
     private Logger log;
-
-    //TODO Autowired Logger
     @Autowired
     public void setLog(Logger log) {
         this.log = log;
@@ -85,6 +83,8 @@ public class UserController {
         List<Form39> form39List = form39ServiceImpl.dateNowIsPresent(dateForNewField, id);
         ModelAndView mod = new ModelAndView();
         mod.addObject("form39List", form39List);
+        mod.addObject("dateStart", dateForNewField);
+        mod.addObject("dateEnd", dateForNewField);
         mod.setViewName("/user/form39Data");
         return mod;
     }
@@ -96,6 +96,8 @@ public class UserController {
         Date curTime = new Date();
         java.sql.Date currentDate = new java.sql.Date(curTime.getTime());
         List<Form39> listForm39ByDateNow = form39ServiceImpl.dateNowIsPresent(currentDate, id.get(0));
+        mod.addObject("dateStart", currentDate);
+        mod.addObject("dateEnd", currentDate);
         mod.addObject("form39List", listForm39ByDateNow);
         mod.setViewName("/user/form39Data");
         return mod;

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-    <title>List information Doctor</title>
+    <title>Спеціальність лікарів</title>
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
@@ -9,12 +9,12 @@
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
     <div class="jumbotron">
         <div th:if="${not #lists.isEmpty(informationDoctorList)}">
-            <h2>List information Doctor</h2>
+            <h2>Спеціальність лікарів</h2>
             <table class="table table-striped">
                 <tr>
-                    <th>Id</th>
-                    <th>specialtyOfDoctor</th>
-                    <th>room</th>
+                    <th>№ П/П</th>
+                    <th>Спеціальність лікаря</th>
+                    <th>№ кабінета</th>
                 </tr>
                 <tr th:each="informationDoctor : ${informationDoctorList}">
                     <td th:text="${informationDoctor.id}">id</td>
@@ -27,8 +27,8 @@
             <div>
                 <table class="table table-striped">
                     <tr>
-                        <th>specialty Of Doctor</th>
-                        <th>room</th>
+                        <th>Спеціальність лікаря</th>
+                        <th>№ кабінета</th>
                     </tr>
                     <tr>
                         <td><input type="text" th:name="specialtyOfDoctor" th:field="*{specialtyOfDoctor}"
