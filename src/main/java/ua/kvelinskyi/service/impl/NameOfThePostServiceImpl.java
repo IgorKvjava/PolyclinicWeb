@@ -36,7 +36,7 @@ public class NameOfThePostServiceImpl implements NameOfThePostService{
     }
 
     @Override
-    public List<User> getListUsersForRowNumber(int num) {
-        return nameOfThePostRepository.findAllByRowNumber(num);
+    public NameOfThePost getElementForRowNumber(int num) {
+        return nameOfThePostRepository.findByRowNumber(num);
     }
 }

@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import ua.kvelinskyi.entity.Form39;
-import ua.kvelinskyi.entity.InformationDoctor;
-import ua.kvelinskyi.entity.NameOfThePost;
-import ua.kvelinskyi.entity.User;
+import ua.kvelinskyi.entity.*;
 import ua.kvelinskyi.service.impl.Form39ServiceImpl;
 import ua.kvelinskyi.service.impl.InformationDoctorServiceImpl;
 import ua.kvelinskyi.service.impl.NameOfThePostServiceImpl;
@@ -245,22 +242,29 @@ public class AdminController {
         log.info("class AdminController - View Form2100/1 Data Of All Doctor");
         ModelAndView mod = new ModelAndView();
         List<Form39> listForm21001 = form39ServiceImpl.dataForm39ByTimeInterval(dateStart, dateEnd);
-        log.info("class AdminController listForm21001 = " + listForm21001);
-        int num = 2;
-        List<Form39> sumForm39ForTable21001 = new ArrayList<>();
-        while (num < 91){
-            List<User> listUsers = nameOfThePostServiceImpl.getListUsersForRowNumber(num);
+        log.info("class AdminController listForm21001.size = " + listForm21001.size());
+        List<Form21001> sumForm39ForTable21001 = new ArrayList<>();
+        List<NameOfThePost> nameOfThePostList = nameOfThePostServiceImpl.getAll();
+        log.info("class AdminController nameOfThePostList.size()= " + nameOfThePostList.size());
+        for (NameOfThePost value : nameOfThePostList){
+            NameOfThePost elementForRowNumber = nameOfThePostServiceImpl.getElementForRowNumber(value.getRowNumber());
+            //TODO elementForRowNumber.getUserList() infinity recursion
+            //log.info("class AdminController listUsers = " + elementForRowNumber.getUserList());
             //sum for users by row number
             List<Form39> sumForm39ForRowNumber = new ArrayList<>();
-            for (User user : listUsers
+            for (User user: elementForRowNumber.getUserList()
                  ) {
-                List<Form39> listForm39 = form39ServiceImpl.dataForm39ByTimeIntervalAndIdDoc(dateStart,
-                        dateEnd, user.getId());
+                List<Form39> listForm39 = form39ServiceImpl.dataForm39ByTimeIntervalAndIdDoc(dateStart, dateEnd, user.getId());
+                log.info("class AdminController listForm39.size() = " + listForm39.size());
                 sumForm39ForRowNumber.add(controllerHelper.sumForms2100Entity(listForm39));
+                log.info("class AdminController sumForm39ForRowNumber.size() = " + sumForm39ForRowNumber.size());
             }
-            sumForm39ForTable21001.add(controllerHelper.sumForms2100Entity(sumForm39ForRowNumber));
-            //Form39 sumForms21001ForUsersRowNumber= controllerHelper.sumForms21001ForUsers(listUsers);
-            num++;
+            Form21001 form21001 = new Form21001();
+            form21001.setRowNumber(value.getRowNumber());
+            form21001.setPosition(value.getPosition());
+            form21001.setForm39(controllerHelper.sumForms2100Entity(sumForm39ForRowNumber));
+            sumForm39ForTable21001.add(form21001);
+            log.info("class AdminController form21001 " + form21001.getRowNumber() + "==== " + form21001.getPosition());
         }
         mod.addObject("sumForm39ForTable21001", sumForm39ForTable21001);
         mod.addObject("sumForms21001", controllerHelper.sumForms2100Entity(listForm21001));

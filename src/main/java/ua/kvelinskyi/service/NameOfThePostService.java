@@ -13,5 +13,5 @@ public interface NameOfThePostService {
 
     NameOfThePost getById(Integer nameOfThePostID);
 
-    List<User> getListUsersForRowNumber(int num);
+    NameOfThePost getElementForRowNumber(int num);
 }
