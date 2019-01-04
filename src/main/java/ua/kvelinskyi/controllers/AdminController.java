@@ -2,20 +2,29 @@ package ua.kvelinskyi.controllers;
 
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import ua.kvelinskyi.entity.Form39;
 import ua.kvelinskyi.entity.InformationDoctor;
+import ua.kvelinskyi.entity.NameOfThePost;
 import ua.kvelinskyi.entity.User;
 import ua.kvelinskyi.service.impl.Form39ServiceImpl;
 import ua.kvelinskyi.service.impl.InformationDoctorServiceImpl;
+import ua.kvelinskyi.service.impl.NameOfThePostServiceImpl;
 import ua.kvelinskyi.service.impl.UserServiceImpl;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,18 +38,20 @@ public class AdminController {
     public void setLog(Logger log) {
         this.log = log;
     }
-
+    private File exportedFile;
     @Autowired
-    Form39ServiceImpl form39ServiceImpl;
-
+    private Form39ServiceImpl form39ServiceImpl;
     @Autowired
-    UserServiceImpl userServiceImpl;
-
+    private UserServiceImpl userServiceImpl;
     @Autowired
-    InformationDoctorServiceImpl informationDoctorServiceImpl;
-
+    private InformationDoctorServiceImpl informationDoctorServiceImpl;
     @Autowired
-    ControllerHelper controllerHelper;
+    private ControllerHelper controllerHelper;
+    @Autowired
+    private NameOfThePostServiceImpl nameOfThePostServiceImpl;
+    private List<InformationDoctor> informationDoctorList;
+    private List<NameOfThePost> nameOfThePostList;
+
 
     private Integer dayOfDate(java.sql.Date date) {
         String datePars = date.toString();
@@ -183,6 +194,37 @@ public class AdminController {
         return controllerHelper.modelForPageForm39(listForm39, dateStart, dateEnd, "/admin/form39Admin");
     }
 
+    //Использовать для добавления списка врачей для формы 2100/1 , кнопка на странице form39Admin.html
+    /*
+    @RequestMapping("/admin/form39Data/add")
+    public ModelAndView doAddListDocsForForm21001() {
+        log.info("class AdminController - View add");
+        List<String> fileLines = null;
+        try {
+            //C:\Users\igorjava\IdeaProjects
+            fileLines = Files.readAllLines(Paths.get("C:\\Users\\igorjava\\IdeaProjects\\list_docs.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String text1 = null;
+        for (String text: fileLines) {
+            text1+=text;
+        }
+        String[] fileLines1 = text1.split("=");
+        int num = 2;
+        for (String value :fileLines1
+             ) {
+            NameOfThePost nameOfThePost = new NameOfThePost();
+            nameOfThePost.setRowNumber(num);
+            nameOfThePost.setPosition(value);
+            nameOfThePostServiceImpl.addNameOfThePost(nameOfThePost);
+            log.info("class AdminController file " + nameOfThePost);
+            num++;
+        }
+        log.info("class AdminController file " + text1);
+        return formDateStartEnd("/admin/form39Admin");
+    }
+*/
     @RequestMapping("/admin/form2100Data/timeInterval")
     public ModelAndView doViewForm2100DataOfAllDoctor(@RequestParam("dateStart") java.sql.Date dateStart,
                                                       @RequestParam("dateEnd") java.sql.Date dateEnd) {
@@ -204,10 +246,89 @@ public class AdminController {
         ModelAndView mod = new ModelAndView();
         List<Form39> listForm21001 = form39ServiceImpl.dataForm39ByTimeInterval(dateStart, dateEnd);
         log.info("class AdminController listForm21001 = " + listForm21001);
+        int num = 2;
+        List<Form39> sumForm39ForTable21001 = new ArrayList<>();
+        while (num < 91){
+            List<User> listUsers = nameOfThePostServiceImpl.getListUsersForRowNumber(num);
+            //sum for users by row number
+            List<Form39> sumForm39ForRowNumber = new ArrayList<>();
+            for (User user : listUsers
+                 ) {
+                List<Form39> listForm39 = form39ServiceImpl.dataForm39ByTimeIntervalAndIdDoc(dateStart,
+                        dateEnd, user.getId());
+                sumForm39ForRowNumber.add(controllerHelper.sumForms2100Entity(listForm39));
+            }
+            sumForm39ForTable21001.add(controllerHelper.sumForms2100Entity(sumForm39ForRowNumber));
+            //Form39 sumForms21001ForUsersRowNumber= controllerHelper.sumForms21001ForUsers(listUsers);
+            num++;
+        }
+        mod.addObject("sumForm39ForTable21001", sumForm39ForTable21001);
         mod.addObject("sumForms21001", controllerHelper.sumForms2100Entity(listForm21001));
         mod.addObject("dateStart", dateStart);
         mod.addObject("dateEnd", dateEnd);
         mod.setViewName("/admin/form21001Admin");
+        return mod;
+    }
+
+    @RequestMapping(value = "/admin/signUp", method = RequestMethod.GET)
+    public ModelAndView getRegistrationPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/registration");
+        this.informationDoctorList = informationDoctorServiceImpl.getAll();
+        informationDoctorList.remove(0);
+        this.nameOfThePostList = nameOfThePostServiceImpl.getAll();
+        modelAndView.addObject("msg", "Введіть коректно дані");
+        modelAndView.addObject("informationDoctorList", informationDoctorList);
+        modelAndView.addObject("nameOfThePostList", nameOfThePostList);
+        log.info("class LoginController - signUp has started !");
+        return modelAndView;
+    }
+
+    //TODO change registration
+    @RequestMapping(value = "/admin/registration", method = RequestMethod.POST)
+    public ModelAndView doRegistrationUser(@RequestParam("login") String login,
+                                           @RequestParam("password") String password,
+                                           @RequestParam("id") Integer informationDoctorID,
+                                           @RequestParam("idPost") Integer nameOfThePostID) {
+        log.info("public class AdminController -- registration");
+        ModelAndView mod = new ModelAndView();
+        if (userServiceImpl.getByLogin(login) != null) {
+            log.info("class AdminController - registration Login isExist");
+            mod.addObject("msg", "Такий користовач існуе");
+            mod.addObject("informationDoctorList", informationDoctorList);
+            mod.setViewName("admin/registration");
+        } else {
+            User user = new User();
+            user.setLogin(login);
+            String encryptedPassword = new BCryptPasswordEncoder().encode(password);
+            user.setPassword(encryptedPassword);
+            user.setEnabled("true");
+            user.setRole(2);
+            user.setUserName("Ввести імя лікаря");
+            try {
+                InformationDoctor informationDoctor = informationDoctorServiceImpl.getById(informationDoctorID);
+                NameOfThePost nameOfThePost = nameOfThePostServiceImpl.getById(nameOfThePostID);
+                log.info("class AdminController - information Doctor Id : " + informationDoctor.getId());
+                log.info("class AdminController - information Name Of The Post Id : " + nameOfThePost.getId());
+                user.setInformationDoctor(informationDoctor);
+                user.setNameOfThePost(nameOfThePost);
+                user = userServiceImpl.addUser(user);
+                log.info("class AdminController - registration new user" + user.getUserName());
+                if (user != null) {
+                    mod.setViewName("index");
+                } else {
+                    mod.addObject("msg", "Реєстрація невдалась спробуйте ще");
+                    mod.addObject("informationDoctorList", informationDoctorList);
+                    mod.setViewName("admin/registration");
+                }
+            }catch (NullPointerException e){
+                log.info("class AdminController - information Doctor Id page : " + informationDoctorID + ". Exception : NullPointerException");
+                mod.addObject("msg", "Виберіть посаду лікаря");
+                mod.addObject("informationDoctorList", informationDoctorList);
+                mod.setViewName("admin/registration");
+            }
+
+        }
         return mod;
     }
 

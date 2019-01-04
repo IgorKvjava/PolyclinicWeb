@@ -26,11 +26,6 @@ public class LoginController {
 
     @Autowired
     private FormValidator formValidator;
-    @Autowired
-    private UserServiceImpl userServiceImpl;
-    @Autowired
-    private InformationDoctorServiceImpl informationDoctorServiceImpl;
-    private List<InformationDoctor> informationDoctorList;
 
     @RequestMapping(value = "/")
     public ModelAndView getIndexSlash() {
@@ -81,61 +76,6 @@ public class LoginController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/admin/signUp", method = RequestMethod.GET)
-    public ModelAndView getRegistrationPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("admin/registration");
-        this.informationDoctorList = informationDoctorServiceImpl.getAll();
-        informationDoctorList.remove(0);
-        modelAndView.addObject("msg", "Введіть коректно дані");
-        modelAndView.addObject("informationDoctorList", informationDoctorList);
-        log.info("class LoginController - signUp has started !");
-        return modelAndView;
-    }
-
-    //TODO change registration
-    @RequestMapping(value = "/admin/registration", method = RequestMethod.POST)
-    public ModelAndView doRegistrationUser(@RequestParam("login") String login,
-                                           @RequestParam("password") String password,
-                                           @RequestParam("id") Integer informationDoctorID) {
-        log.info("public class LoginController -- registration");
-        ModelAndView mod = new ModelAndView();
-        if (userServiceImpl.getByLogin(login) != null) {
-            log.info("class LoginController - registration Login isExist");
-            mod.addObject("msg", "Такий користовач існуе");
-            mod.addObject("informationDoctorList", informationDoctorList);
-            mod.setViewName("admin/registration");
-        } else {
-            User user = new User();
-            user.setLogin(login);
-            String encryptedPassword = new BCryptPasswordEncoder().encode(password);
-            user.setPassword(encryptedPassword);
-            user.setEnabled("true");
-            user.setRole(2);
-            user.setUserName("enter your name");
-            try {
-                InformationDoctor informationDoctor = informationDoctorServiceImpl.getById(informationDoctorID);
-                log.info("class LoginController - information Doctor Id : " + informationDoctor.getId());
-                user.setInformationDoctor(informationDoctor);
-                user = userServiceImpl.addUser(user);
-                log.info("class LoginController - registration new user" + user.getUserName());
-                if (user != null) {
-                    mod.setViewName("index");
-                } else {
-                    mod.addObject("msg", "Реєстрація невдалась спробуйте ще");
-                    mod.addObject("informationDoctorList", informationDoctorList);
-                    mod.setViewName("admin/registration");
-                }
-            }catch (NullPointerException e){
-                log.info("class LoginController - information Doctor Id page : " + informationDoctorID + ". Exception : NullPointerException");
-                mod.addObject("msg", "Виберіть посаду лікаря");
-                mod.addObject("informationDoctorList", informationDoctorList);
-                mod.setViewName("admin/registration");
-            }
-
-        }
-        return mod;
-    }
 
     // TODO do'n use initValidator
     @InitBinder

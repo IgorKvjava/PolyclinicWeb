@@ -17,6 +17,7 @@ public class User {
     private List<PhoneBook> phoneBookList = new ArrayList<>();
     private int role;
     private InformationDoctor informationDoctor;
+    private NameOfThePost nameOfThePost;
 
 
 
@@ -25,7 +26,7 @@ public class User {
 
     public User(String login, String password, String userName, String enabled,
                 List<Form39> form39List, List<PhoneBook> phoneBookList, int role,
-                InformationDoctor informationDoctor) {
+                InformationDoctor informationDoctor, NameOfThePost nameOfThePost) {
         this.login = login;
         this.password = password;
         this.userName = userName;
@@ -34,6 +35,7 @@ public class User {
         this.phoneBookList = phoneBookList;
         this.role = role;
         this.informationDoctor = informationDoctor;
+        this.nameOfThePost = nameOfThePost;
     }
 
     @Id
@@ -125,6 +127,15 @@ public class User {
     public void setInformationDoctor(InformationDoctor informationDoctor) {
         this.informationDoctor = informationDoctor;
     }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "row_number")
+    public NameOfThePost getNameOfThePost() {
+        return nameOfThePost;
+    }
+
+    public void setNameOfThePost(NameOfThePost nameOfThePost) {
+        this.nameOfThePost = nameOfThePost;
+    }
 
     @Override
     public String toString() {
@@ -138,6 +149,7 @@ public class User {
                 ", phoneBookList=" + phoneBookList +
                 ", role=" + role +
                 ", informationDoctor=" + informationDoctor +
+                ", nameOfThePost=" + nameOfThePost +
                 '}';
     }
 
@@ -154,11 +166,12 @@ public class User {
                 Objects.equals(enabled, user.enabled) &&
                 Objects.equals(form39List, user.form39List) &&
                 Objects.equals(phoneBookList, user.phoneBookList) &&
-                Objects.equals(informationDoctor, user.informationDoctor);
+                Objects.equals(informationDoctor, user.informationDoctor) &&
+                Objects.equals(nameOfThePost, user.nameOfThePost);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, password, userName, enabled, form39List, phoneBookList, role, informationDoctor);
+        return Objects.hash(id, login, password, userName, enabled, form39List, phoneBookList, role, informationDoctor, nameOfThePost);
     }
 }

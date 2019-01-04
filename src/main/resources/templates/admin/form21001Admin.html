@@ -17,7 +17,8 @@
                         <th class="eventh"></th>
                         <th class="eventh"></th>
                         <th class="eventh"></th>
-                        <th class="eventh" colspan="2">Кількість відвідувань з <br/>приводу захворювань (із графи 1)</th>
+                        <th class="eventh" colspan="2">Кількість відвідувань з <br/>приводу захворювань (із графи 1)
+                        </th>
                         <th class="eventh" colspan="3">Кількість відвідувань лікарями хворих <br/>удома</th>
                     </tr>
                     <tr bgcolor="#A9A9A9">
@@ -28,7 +29,8 @@
                             <div class="vert-text">Номер рядка</div>
                         </th>
                         <th class="eventh">
-                            <div class="vert-text">Кількість відвідувань лікарів <br/>включно з профілак-тичними- усього</div>
+                            <div class="vert-text">Кількість відвідувань лікарів <br/>включно з профілак-тичними- усього
+                            </div>
                         </th>
                         <th class="eventh">
                             <div class="vert-text">у тому числі сільських жителів</div>
@@ -73,6 +75,9 @@
                             <td th:text="${sumForms21001.childrenPatronage}"></td>
                         </tr>
                     </div>
+                    <tr th:each="form39 : ${sumForm39ForTable21001}">
+                        <td></td>
+                    </tr>
                 </table>
             </div>
         </div>

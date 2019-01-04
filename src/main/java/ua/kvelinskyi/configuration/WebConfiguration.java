@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 //@EnableWebMvc
-//@ComponentScan({"ua.ua.kvelinskyi"})
+//@ComponentScan({"ua.kvelinskyi"})
 
 //TODO implements WebMvcConfigurer for spring-framework-version 5.0.1.RELEASE
 public class WebConfiguration extends WebMvcConfigurerAdapter {
