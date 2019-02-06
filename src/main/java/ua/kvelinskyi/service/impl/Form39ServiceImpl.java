@@ -32,7 +32,7 @@ public class Form39ServiceImpl implements Form39Service {
 
     @Override
     public List<Form39> dataForm39ByTimeIntervalAndIdDoc(Date dateStart, Date dateEnd, Integer idDoc) {
-        log.info("class Form39ServiceImpl for dataForm39ByTimeIntervalAndIdDoc- dateStart = " + dateStart + " dateEnd = " + dateEnd + " IdDoc = " + idDoc);
+        //log.info("class Form39ServiceImpl for dataForm39ByTimeIntervalAndIdDoc- dateStart = " + dateStart + " dateEnd = " + dateEnd + " IdDoc = " + idDoc);
         return form39Repository.findByDateNowBetweenAndIdDoctorOrderByNumDay(dateStart, dateEnd, idDoc);
     }
 

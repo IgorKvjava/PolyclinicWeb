@@ -54,8 +54,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Integer> getUserIdByLogin(String login) {
-        return userRepository.getIdUserByLogin(login);
+    public Integer getUserIdByLogin(String login) {
+        return userRepository.getIdUserByLogin(login).get(0);
     }
 
     public List<Form39> getListForm39User(Integer idUser) {

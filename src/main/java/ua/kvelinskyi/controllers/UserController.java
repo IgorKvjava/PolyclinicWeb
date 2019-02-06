@@ -15,12 +15,13 @@ import ua.kvelinskyi.entity.User;
 import ua.kvelinskyi.service.impl.Form39ServiceImpl;
 import ua.kvelinskyi.service.impl.UserServiceImpl;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Controller
 public class UserController {
     private Logger log;
+
     @Autowired
     public void setLog(Logger log) {
         this.log = log;
@@ -30,99 +31,105 @@ public class UserController {
     UserServiceImpl userServiceImpl;
     @Autowired
     Form39ServiceImpl form39ServiceImpl;
-
     @Autowired
     ControllerHelper controllerHelper;
 
-    private Integer dayOfDate (java.sql.Date date){
+    //DATE_FORMAT = "yyyy-MM-dd"
+    private Integer dayOfDate(Date date) {
         String datePars = date.toString();
         String[] stringList = datePars.split("-");
         return Integer.parseInt(stringList[2]);
     }
 
+    private Date getCurrentDate() {
+        return new Date((new java.util.Date()).getTime());
+    }
+
+    private Boolean isValidationDataForForm39(Form39 form39) {
+        Boolean bool = true;
+        log.info("class UserController - col(1) " + form39.getNumberVisitsAll()
+                + " >= " + (form39.getAdultsVisitsDisease() + form39.getChildrenVisitsDisease()
+                + form39.getVisitsHomeAll()));
+        if (form39.getNumberVisitsAll() >= (form39.getAdultsVisitsDisease()
+                + form39.getChildrenVisitsDisease() + form39.getVisitsHomeAll())) {
+            if ((form39.getNumberVisitsAll() >= form39.getChildrenVisitsVillagers())
+                    && (form39.getNumberVisitsAll() >= (form39.getAdultsVisitsDiseaseVillagers()
+                    + form39.getChildrenVisitsDiseaseVillagers() + form39.getVisitsHomeVillagers()))
+                    && (form39.getOfVillagers() >= form39.getChildrenVisitsDisease())) {
+
+                if ((form39.getChildrenVisitsVillagers() <= form39.getChildrenVisitsAll())
+                        && (form39.getVisitsHomeAll() >= form39.getVisitsHomeVillagers())
+                        && (form39.getChildrenVisitsHomeAll() <= form39.getVisitsHomeAll())
+                        && (form39.getChildrenVisitsHomeVillagers() <= form39.getVisitsHomeVillagers())
+                        && (form39.getChildrenPatronage() >= form39.getChildrenPatronageVillagers())) {
+                    bool = false;
+                }
+            }
+
+        }
+        return bool;
+    }
+
+    //empty page for form 39
     @RequestMapping("/user/form39")
     public ModelAndView doForm39(Authentication loggedUser) {
-        log.info("class UserController - page form-39 for new data ");
-        User authenticationUser = userServiceImpl.getByLogin(loggedUser.getName());
+        log.info("class UserController - page /user/form39");
+        Date currentDate = getCurrentDate();
         Form39 form39 = new Form39();
-        Date curTime = new Date();
-        java.sql.Date currentDate = new java.sql.Date(curTime.getTime());
-        form39.setDateNow(currentDate);
-        form39.setNumDay(dayOfDate(currentDate));
-        ModelAndView mod = new ModelAndView();
-        mod.addObject("UserId", authenticationUser.getId());
-        // form39.setAdultsVisitsDisease(5);
-        mod.addObject("form39", form39);
-        mod.setViewName("/user/form39");
-        return mod;
+        return controllerHelper.modelForPageCompleteForm39(form39, currentDate, dayOfDate(currentDate)
+                , userServiceImpl.getUserIdByLogin(loggedUser.getName()), "/user/form39", "Введіть коректно дані");
     }
 
-    //TODO don't repeat this page ---if(listForm39ByDateNow.isEmpty())
+    //save new form 39 to DB
     @RequestMapping("/user/form39/{id}")
-    public ModelAndView doEditForm39(@PathVariable Integer id,
-                                     Form39 form39) {
-       //TODO LocalDate tt= chang
-        log.info("class UserController - page form-39 select data ");
-        //Date curTime = new Date();
-        java.sql.Date dateForNewField = form39.getDateNow();
-        //String DATE_FORMAT = "yyyy-MM-dd";
-        //java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(DATE_FORMAT);
-        //java.sql.Date currentDate = java.sql.Date.valueOf(sdf.format(curTime));
+    public ModelAndView doEditForm39(@PathVariable Integer id, Form39 form39) {
+        log.info("class UserController - /user/form39/{id}");
+        Date dateForNewField = form39.getDateNow();
+        log.info("class UserController - dateForNewField = " + dateForNewField);
         List<Form39> listForm39ByDateNow = form39ServiceImpl.dateNowIsPresent(dateForNewField, id);
-            log.info("----------listForm39ByDateNow--" + listForm39ByDateNow);
-            int day = dayOfDate(dateForNewField);
+        log.info("class UserController - check is empty(listForm39ByDateNow) size = " + listForm39ByDateNow.size());
         if (listForm39ByDateNow.isEmpty()) {
-            //TODO set id 0 else id=(current id user), form39 update
+            //set id 0 else IdDoctor=(current id user), form39 update
             form39.setId(0);
-            form39.setNumDay(day);
+            form39.setNumDay(dayOfDate(dateForNewField));
             form39.setIdDoctor(id);
-            form39.setUser(userServiceImpl.getUserById(id));
-            log.info("class UserController - page form-39 select data " + form39);
+            form39.setUser(new User(id));
+            if (isValidationDataForForm39(form39)) {
+                return controllerHelper.modelForPageCompleteForm39(form39, form39.getDateNow(), form39.getNumDay()
+                        , id, "/user/form39", "Дані введено невірно");
+            }
             form39ServiceImpl.addForm39(form39);
+            log.info("class UserController - (form 39 saved) id = " + form39.getId());
         }
         List<Form39> form39List = form39ServiceImpl.dateNowIsPresent(dateForNewField, id);
-        ModelAndView mod = new ModelAndView();
-        mod.addObject("form39List", form39List);
-        mod.addObject("dateStart", dateForNewField);
-        mod.addObject("dateEnd", dateForNewField);
-        mod.setViewName("/user/form39Data");
-        return mod;
+        return controllerHelper.modelForPageForm39(form39List, dateForNewField, dateForNewField, "/user/form39Data");
     }
 
+    //viewing form 39 by current date
     @RequestMapping("/user/form39Data")
     public ModelAndView doViewForm39Data(Authentication loggedUser) {
-        ModelAndView mod = new ModelAndView();
-        List<Integer> id = userServiceImpl.getUserIdByLogin(loggedUser.getName());
-        Date curTime = new Date();
-        java.sql.Date currentDate = new java.sql.Date(curTime.getTime());
-        List<Form39> listForm39ByDateNow = form39ServiceImpl.dateNowIsPresent(currentDate, id.get(0));
-        mod.addObject("dateStart", currentDate);
-        mod.addObject("dateEnd", currentDate);
-        mod.addObject("form39List", listForm39ByDateNow);
-        mod.setViewName("/user/form39Data");
-        return mod;
+        log.info("class UserController - /user/form39Data");
+        Date currentDate = getCurrentDate();
+        List<Form39> listForm39ByDateNow = form39ServiceImpl.dateNowIsPresent
+                (currentDate, userServiceImpl.getUserIdByLogin(loggedUser.getName()));
+        return controllerHelper.modelForPageForm39(listForm39ByDateNow, currentDate, currentDate, "/user/form39Data");
     }
 
+    //viewing form 39 by time Interval
     @RequestMapping("/user/form39Data/timeInterval")
     public ModelAndView doViewForm39DataByTimeInterval(Authentication loggedUser,
-                                                     @RequestParam("dateStart") java.sql.Date dateStart,
-                                                     @RequestParam("dateEnd") java.sql.Date dateEnd){
-        List<Integer> id = userServiceImpl.getUserIdByLogin(loggedUser.getName());
-//        ModelAndView mod = new ModelAndView();
+                                                       @RequestParam("dateStart") Date dateStart,
+                                                       @RequestParam("dateEnd") Date dateEnd) {
+        log.info("class UserController - /user/form39Data/timeInterval");
         List<Form39> listForm39 = form39ServiceImpl.dataForm39ByTimeIntervalAndIdDoc(dateStart,
-                dateEnd, id.get(0));
-        /*mod.addObject("sumForms39", controllerHelper.sumForms39Entity(listForm39));
-        mod.addObject("form39List", listForm39);
-        mod.addObject("dateStart", dateStart);
-        mod.addObject("dateEnd", dateEnd);
-        mod.setViewName("/user/form39Data");*/
+                dateEnd, userServiceImpl.getUserIdByLogin(loggedUser.getName()));
         return controllerHelper.modelForPageForm39(listForm39, dateStart, dateEnd, "/user/form39Data");
     }
 
     //TODO generate  ERROR PAGE 500
     @RequestMapping("/zzz")
-            public ResponseEntity<String> gggg(){
-        int e = 1/0;
+    public ResponseEntity<String> gggg() {
+        int e = 1 / 0;
         return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

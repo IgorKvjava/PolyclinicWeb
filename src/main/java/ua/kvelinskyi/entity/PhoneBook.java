@@ -122,8 +122,6 @@ public class PhoneBook {
         this.eMail = eMail;
     }
 
-
-
     @ManyToOne
     @JoinColumn(name = "user_id")
 //            , foreignKey = @ForeignKey(name = "id_user_key_"))

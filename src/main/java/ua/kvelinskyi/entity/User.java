@@ -13,20 +13,23 @@ public class User {
     private String password;
     private String userName;
     private String enabled;
-    private List<Form39> form39List = new ArrayList<>();
-    private List<PhoneBook> phoneBookList = new ArrayList<>();
+    private List<Form39> form39List;
+    private List<PhoneBook> phoneBookList;
     private int role;
     private InformationDoctor informationDoctor;
     private NameOfThePost nameOfThePost;
 
-
-
     public User() {
     }
 
-    public User(String login, String password, String userName, String enabled,
-                List<Form39> form39List, List<PhoneBook> phoneBookList, int role,
-                InformationDoctor informationDoctor, NameOfThePost nameOfThePost) {
+    public User(int id) {
+        this.id = id;
+    }
+
+    public User(int id, String login, String password, String userName
+            , String enabled, List<Form39> form39List, List<PhoneBook> phoneBookList
+            , int role, InformationDoctor informationDoctor, NameOfThePost nameOfThePost) {
+        this.id = id;
         this.login = login;
         this.password = password;
         this.userName = userName;
@@ -118,7 +121,7 @@ public class User {
         this.form39List = form39List;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "information_doctor_id")
     public InformationDoctor getInformationDoctor() {
         return informationDoctor;
@@ -127,7 +130,8 @@ public class User {
     public void setInformationDoctor(InformationDoctor informationDoctor) {
         this.informationDoctor = informationDoctor;
     }
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name = "row_number")
     public NameOfThePost getNameOfThePost() {
         return nameOfThePost;
@@ -157,21 +161,35 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         User user = (User) o;
-        return id == user.id &&
-                role == user.role &&
-                Objects.equals(login, user.login) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(userName, user.userName) &&
-                Objects.equals(enabled, user.enabled) &&
-                Objects.equals(form39List, user.form39List) &&
-                Objects.equals(phoneBookList, user.phoneBookList) &&
-                Objects.equals(informationDoctor, user.informationDoctor) &&
-                Objects.equals(nameOfThePost, user.nameOfThePost);
+
+        if (id != user.id) return false;
+        if (role != user.role) return false;
+        if (login != null ? !login.equals(user.login) : user.login != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (userName != null ? !userName.equals(user.userName) : user.userName != null) return false;
+        if (enabled != null ? !enabled.equals(user.enabled) : user.enabled != null) return false;
+        if (form39List != null ? !form39List.equals(user.form39List) : user.form39List != null) return false;
+        if (phoneBookList != null ? !phoneBookList.equals(user.phoneBookList) : user.phoneBookList != null)
+            return false;
+        if (informationDoctor != null ? !informationDoctor.equals(user.informationDoctor) : user.informationDoctor != null)
+            return false;
+        return nameOfThePost != null ? nameOfThePost.equals(user.nameOfThePost) : user.nameOfThePost == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, password, userName, enabled, form39List, phoneBookList, role, informationDoctor, nameOfThePost);
+        int result = id;
+        result = 31 * result + (login != null ? login.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (userName != null ? userName.hashCode() : 0);
+        result = 31 * result + (enabled != null ? enabled.hashCode() : 0);
+        result = 31 * result + (form39List != null ? form39List.hashCode() : 0);
+        result = 31 * result + (phoneBookList != null ? phoneBookList.hashCode() : 0);
+        result = 31 * result + role;
+        result = 31 * result + (informationDoctor != null ? informationDoctor.hashCode() : 0);
+        result = 31 * result + (nameOfThePost != null ? nameOfThePost.hashCode() : 0);
+        return result;
     }
 }

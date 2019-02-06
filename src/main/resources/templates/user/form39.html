@@ -8,6 +8,7 @@
 <div class="container">
     <th:block th:include="fragments/header :: header"></th:block>
     <div class="jumbotron">
+        <h3 th:inline="text" th:style="'text-align: center'" >Повідомлення : [[${msg}]]</h3>
         <div >
             <form  th:object="${form39}" th:action="@{'/user/form39/'+${UserId}}">
                 <h2>ФОРМА №39</h2>

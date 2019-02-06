@@ -74,18 +74,19 @@
                             <td th:text="${sumForms21001.childrenVisitsHomeAll}"></td>
                             <td th:text="${sumForms21001.childrenPatronage}"></td>
                         </tr>
+
+                        <tr th:each="form21001 : ${sumForm39ForTable21001}">
+                            <td th:text="${form21001.position}"></td>
+                            <td th:text="${form21001.rowNumber}"></td>
+                            <td th:text="${form21001.form39.numberVisitsAll}==0 ? '' : ${form21001.form39.numberVisitsAll}"></td>
+                            <td th:text="${form21001.form39.ofVillagers}==0 ? '' : ${form21001.form39.ofVillagers}"></td>
+                            <td th:text="${form21001.form39.adultsVisitsDisease}==0 ? '' : ${form21001.form39.adultsVisitsDisease}"></td>
+                            <td th:text="${form21001.form39.childrenVisitsDisease}==0 ? '' : ${form21001.form39.childrenVisitsDisease}"></td>
+                            <td th:text="${form21001.form39.visitsHomeAll}==0 ? '' : ${form21001.form39.visitsHomeAll}"></td>
+                            <td th:text="${form21001.form39.childrenVisitsHomeAll}==0 ? '' : ${form21001.form39.childrenVisitsHomeAll}"></td>
+                            <td th:text="${form21001.form39.childrenPatronage}==0 ? '' : ${form21001.form39.childrenPatronage}"></td>
+                        </tr>
                     </div>
-                    <tr th:each="form21001 : ${sumForm39ForTable21001}">
-                        <td th:text="${form21001.position}"></td>
-                        <td th:text="${form21001.rowNumber}"></td>
-                        <td th:text="${form21001.form39.numberVisitsAll}"></td>
-                        <td th:text="${form21001.form39.ofVillagers}"></td>
-                        <td th:text="${form21001.form39.adultsVisitsDisease}"></td>
-                        <td th:text="${form21001.form39.childrenVisitsDisease}"></td>
-                        <td th:text="${form21001.form39.visitsHomeAll}"></td>
-                        <td th:text="${form21001.form39.childrenVisitsHomeAll}"></td>
-                        <td th:text="${form21001.form39.childrenPatronage}"></td>
-                    </tr>
                 </table>
             </div>
         </div>

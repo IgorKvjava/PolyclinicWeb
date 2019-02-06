@@ -11,7 +11,7 @@ public class NameOfThePost {
     private int id;
     private String position;
     private int rowNumber;
-    private List<User> userList = new ArrayList<>();
+    private List<User> userList;
 
     public NameOfThePost() {
     }
@@ -54,7 +54,7 @@ public class NameOfThePost {
         this.rowNumber = rowNumber;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "nameOfThePost")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "nameOfThePost")
     public List<User> getUserList() {
         return userList;
     }

@@ -3,7 +3,6 @@ package ua.kvelinskyi.controllers;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 import ua.kvelinskyi.entity.Form39;
-import ua.kvelinskyi.entity.User;
 
 import java.sql.Date;
 import java.util.List;
@@ -44,22 +43,22 @@ public class ControllerHelper {
         return sumForms39;
     }
 
-    private Form39 resetTheTable (Form39 sumForm){
-        sumForm.setNumberVisitsAll(0);
-        sumForm.setAdultsVisitsDisease(0);
-        sumForm.setAdultsVisitsDiseaseVillagers(0);
-        sumForm.setChildrenPatronage(0);
-        sumForm.setChildrenPatronageVillagers(0);
-        sumForm.setChildrenVisitsAll(0);
-        sumForm.setChildrenVisitsDisease(0);
-        sumForm.setChildrenVisitsDiseaseVillagers(0);
-        sumForm.setChildrenVisitsHomeAll(0);
-        sumForm.setChildrenVisitsHomeVillagers(0);
-        sumForm.setChildrenVisitsVillagers(0);
-        sumForm.setOfVillagers(0);
-        sumForm.setVisitsHomeAll(0);
-        sumForm.setVisitsHomeVillagers(0);
-        return sumForm;
+    private Form39 resetTheTable (Form39 form39){
+        form39.setNumberVisitsAll(0);
+        form39.setAdultsVisitsDisease(0);
+        form39.setAdultsVisitsDiseaseVillagers(0);
+        form39.setChildrenPatronage(0);
+        form39.setChildrenPatronageVillagers(0);
+        form39.setChildrenVisitsAll(0);
+        form39.setChildrenVisitsDisease(0);
+        form39.setChildrenVisitsDiseaseVillagers(0);
+        form39.setChildrenVisitsHomeAll(0);
+        form39.setChildrenVisitsHomeVillagers(0);
+        form39.setChildrenVisitsVillagers(0);
+        form39.setOfVillagers(0);
+        form39.setVisitsHomeAll(0);
+        form39.setVisitsHomeVillagers(0);
+        return form39;
     }
 
     public ModelAndView modelForPageForm39(List<Form39> listForm39, Date dateStart, Date dateEnd, String url) {
@@ -73,5 +72,16 @@ public class ControllerHelper {
     }
 
 
+    public ModelAndView modelForPageCompleteForm39(Form39 form39, Date currentDate, Integer day
+            , Integer userId, String url, String msg) {
+        ModelAndView mod = new ModelAndView();
+        form39.setDateNow(currentDate);
+        form39.setNumDay(day);
+        mod.addObject("msg", msg);
+        mod.addObject("UserId", userId);
+        mod.addObject("form39", form39);
+        mod.setViewName(url);
+        return  mod;
+    }
 }
 

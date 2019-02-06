@@ -75,12 +75,12 @@ public class AdminController {
                                        @Validated
                                                User user) {
         ModelAndView mod = new ModelAndView();
-        log.info("class AdminController - doUserEditData,  user id = " + user.getId());
+        log.info("class AdminController - doUserEditData,  user id = ");
         User userNew = userServiceImpl.getUserById(user.getId());
         userNew.setUserName(userName);
-        log.info(user);
-        log.info(userNew);
+        log.info("class AdminController old name - " + user);
         userNew = userServiceImpl.editUser(userNew);
+        log.info("class AdminController new name -  " + userNew.getUserName());
         mod.addObject("user", userNew);
         mod.setViewName("/admin/userEditDataPage");
         return mod;
@@ -228,7 +228,7 @@ public class AdminController {
         log.info("class AdminController - View Form2100 Data Of All Doctor");
         ModelAndView mod = new ModelAndView();
         List<Form39> listForm2100 = form39ServiceImpl.dataForm39ByTimeInterval(dateStart, dateEnd);
-        log.info("class AdminController listForm2100 = " + listForm2100);
+        log.info("class AdminController size listForm2100 = " + listForm2100.size());
         mod.addObject("sumForms2100", controllerHelper.sumForms2100Entity(listForm2100));
         mod.addObject("dateStart", dateStart);
         mod.addObject("dateEnd", dateEnd);
@@ -249,7 +249,7 @@ public class AdminController {
         for (NameOfThePost value : nameOfThePostList){
             NameOfThePost elementForRowNumber = nameOfThePostServiceImpl.getElementForRowNumber(value.getRowNumber());
             //TODO elementForRowNumber.getUserList() infinity recursion
-            //log.info("class AdminController listUsers = " + elementForRowNumber.getUserList());
+            log.info("class AdminController listUsers size = " + elementForRowNumber.getUserList().size());
             //sum for users by row number
             List<Form39> sumForm39ForRowNumber = new ArrayList<>();
             for (User user: elementForRowNumber.getUserList()
@@ -279,6 +279,7 @@ public class AdminController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/registration");
         this.informationDoctorList = informationDoctorServiceImpl.getAll();
+        //remove user (admin)
         informationDoctorList.remove(0);
         this.nameOfThePostList = nameOfThePostServiceImpl.getAll();
         modelAndView.addObject("msg", "Введіть коректно дані");
@@ -302,6 +303,7 @@ public class AdminController {
             mod.addObject("informationDoctorList", informationDoctorList);
             mod.setViewName("admin/registration");
         } else {
+            log.info("class AdminController - create new user");
             User user = new User();
             user.setLogin(login);
             String encryptedPassword = new BCryptPasswordEncoder().encode(password);
@@ -317,7 +319,7 @@ public class AdminController {
                 user.setInformationDoctor(informationDoctor);
                 user.setNameOfThePost(nameOfThePost);
                 user = userServiceImpl.addUser(user);
-                log.info("class AdminController - registration new user" + user.getUserName());
+                log.info("class AdminController - registration new user login - " + user.getLogin());
                 if (user != null) {
                     mod.setViewName("index");
                 } else {
@@ -331,7 +333,6 @@ public class AdminController {
                 mod.addObject("informationDoctorList", informationDoctorList);
                 mod.setViewName("admin/registration");
             }
-
         }
         return mod;
     }
