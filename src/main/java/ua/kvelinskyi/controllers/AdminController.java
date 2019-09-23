@@ -114,7 +114,7 @@ public class AdminController {
         return "/admin/usersEditData";
     }
 
-    @RequestMapping("/admin/informationDoctor")
+    @RequestMapping(value = "/admin/informationDoctor", method = RequestMethod.GET)
     public ModelAndView doSpecialtyOfDoctor() {
         log.info("class AdminController - edit Specialty Of Doctor");
         /*ModelAndView mod = new ModelAndView();
