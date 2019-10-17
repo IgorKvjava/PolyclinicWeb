@@ -67,7 +67,7 @@ public class AdminController {
         //user.setPassword(pass);
         //import java.util.Base64;
         model.addAttribute("user", user);
-        return "/admin/userEditDataPage";
+        return "admin/userEditDataPage";
     }
 
     @RequestMapping(value = "/admin/userUpdateData")
@@ -82,7 +82,7 @@ public class AdminController {
         userNew = userServiceImpl.editUser(userNew);
         log.info("class AdminController new name -  " + userNew.getUserName());
         mod.addObject("user", userNew);
-        mod.setViewName("/admin/userEditDataPage");
+        mod.setViewName("admin/userEditDataPage");
         return mod;
     }
 
@@ -92,7 +92,7 @@ public class AdminController {
         log.info("class AdminController - RequestMapping usersEditData");
         List<User> listAllUsers = userServiceImpl.getAll();
         mod.addObject("listAllUsers", listAllUsers);
-        mod.setViewName("/admin/usersEditData");
+        mod.setViewName("admin/usersEditData");
         return mod;
     }
 
@@ -111,7 +111,7 @@ public class AdminController {
         }
         userServiceImpl.editUser(user);
         model.addAttribute("listAllUsers", userServiceImpl.getAll());
-        return "/admin/usersEditData";
+        return "admin/usersEditData";
     }
 
     @RequestMapping(value = "/admin/informationDoctor", method = RequestMethod.GET)
@@ -123,7 +123,7 @@ public class AdminController {
         mod.addObject("informationDoctor", informationDoctor);
         mod.addObject("informationDoctorList", informationDoctorList);
         mod.setViewName("/admin/informationDoctor");*/
-        return formInformationDoctor("/admin/informationDoctor");
+        return formInformationDoctor("admin/informationDoctor");
     }
 
     @RequestMapping("/admin/informationDoctor/add")
@@ -136,7 +136,7 @@ public class AdminController {
         mod.addObject("informationDoctor", informationDoctor);
         mod.addObject("informationDoctorList", informationDoctorList);
         mod.setViewName("/admin/informationDoctor");*/
-        return formInformationDoctor("/admin/informationDoctor");
+        return formInformationDoctor("admin/informationDoctor");
     }
 
     private ModelAndView formInformationDoctor(String url) {
@@ -158,19 +158,19 @@ public class AdminController {
         mod.addObject("dateStart", currentDate);
         mod.addObject("dateEnd", currentDate);
         mod.setViewName("/admin/form39Admin");*/
-        return formDateStartEnd("/admin/form39Admin");
+        return formDateStartEnd("admin/form39Admin");
     }
 
     @RequestMapping("/admin/form2100Admin")
     public ModelAndView doForm2100() {
         log.info("class AdminController - page form-2100 ");
-        return formDateStartEnd("/admin/form2100Admin");
+        return formDateStartEnd("admin/form2100Admin");
     }
 
     @RequestMapping("/admin/form21001Admin")
     public ModelAndView doForm21001() {
         log.info("class AdminController - page form-2100/1 ");
-        return formDateStartEnd("/admin/form21001Admin");
+        return formDateStartEnd("admin/form21001Admin");
     }
 
     private ModelAndView formDateStartEnd(String url) {
@@ -188,7 +188,7 @@ public class AdminController {
                                                     @RequestParam("dateEnd") java.sql.Date dateEnd) {
         log.info("class AdminController - View Form39 Data Of All Doctor");
         List<Form39> listForm39 = form39ServiceImpl.dataForm39ByTimeInterval(dateStart, dateEnd);
-        return controllerHelper.modelForPageForm39(listForm39, dateStart, dateEnd, "/admin/form39Admin");
+        return controllerHelper.modelForPageForm39(listForm39, dateStart, dateEnd, "admin/form39Admin");
     }
 
     //Использовать для добавления списка врачей для формы 2100/1 , кнопка на странице form39Admin.html
@@ -232,7 +232,7 @@ public class AdminController {
         mod.addObject("sumForms2100", controllerHelper.sumForms2100Entity(listForm2100));
         mod.addObject("dateStart", dateStart);
         mod.addObject("dateEnd", dateEnd);
-        mod.setViewName("/admin/form2100Admin");
+        mod.setViewName("admin/form2100Admin");
         return mod;
     }
 
@@ -270,7 +270,7 @@ public class AdminController {
         mod.addObject("sumForms21001", controllerHelper.sumForms2100Entity(listForm21001));
         mod.addObject("dateStart", dateStart);
         mod.addObject("dateEnd", dateEnd);
-        mod.setViewName("/admin/form21001Admin");
+        mod.setViewName("admin/form21001Admin");
         return mod;
     }
 

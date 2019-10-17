@@ -77,7 +77,7 @@ public class UserController {
         Date currentDate = getCurrentDate();
         Form39 form39 = new Form39();
         return controllerHelper.modelForPageCompleteForm39(form39, currentDate, dayOfDate(currentDate)
-                , userServiceImpl.getUserIdByLogin(loggedUser.getName()), "/user/form39", "Введіть коректно дані");
+                , userServiceImpl.getUserIdByLogin(loggedUser.getName()), "user/form39", "Введіть коректно дані");
     }
 
     //save new form 39 to DB
@@ -96,13 +96,13 @@ public class UserController {
             form39.setUser(new User(id));
             if (isValidationDataForForm39(form39)) {
                 return controllerHelper.modelForPageCompleteForm39(form39, form39.getDateNow(), form39.getNumDay()
-                        , id, "/user/form39", "Дані введено невірно");
+                        , id, "user/form39", "Дані введено невірно");
             }
             form39ServiceImpl.addForm39(form39);
             log.info("class UserController - (form 39 saved) id = " + form39.getId());
         }
         List<Form39> form39List = form39ServiceImpl.dateNowIsPresent(dateForNewField, id);
-        return controllerHelper.modelForPageForm39(form39List, dateForNewField, dateForNewField, "/user/form39Data");
+        return controllerHelper.modelForPageForm39(form39List, dateForNewField, dateForNewField, "user/form39Data");
     }
 
     //viewing form 39 by current date
@@ -112,7 +112,7 @@ public class UserController {
         Date currentDate = getCurrentDate();
         List<Form39> listForm39ByDateNow = form39ServiceImpl.dateNowIsPresent
                 (currentDate, userServiceImpl.getUserIdByLogin(loggedUser.getName()));
-        return controllerHelper.modelForPageForm39(listForm39ByDateNow, currentDate, currentDate, "/user/form39Data");
+        return controllerHelper.modelForPageForm39(listForm39ByDateNow, currentDate, currentDate, "user/form39Data");
     }
 
     //viewing form 39 by time Interval
@@ -123,7 +123,7 @@ public class UserController {
         log.info("class UserController - /user/form39Data/timeInterval");
         List<Form39> listForm39 = form39ServiceImpl.dataForm39ByTimeIntervalAndIdDoc(dateStart,
                 dateEnd, userServiceImpl.getUserIdByLogin(loggedUser.getName()));
-        return controllerHelper.modelForPageForm39(listForm39, dateStart, dateEnd, "/user/form39Data");
+        return controllerHelper.modelForPageForm39(listForm39, dateStart, dateEnd, "user/form39Data");
     }
 
     //TODO generate  ERROR PAGE 500

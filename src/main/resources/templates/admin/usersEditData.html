@@ -8,6 +8,7 @@
 <div class="container">
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
     <div class="jumbotron">
+        <form class="form-horizontal" th:action="@{/admin/usersEditData}" method="post">
         <div th:if="${not #lists.isEmpty(listAllUsers)}">
             <h2>Користувачі</h2>
             <table class="table table-striped">
@@ -33,6 +34,7 @@
                 </tr>
             </table>
         </div>
+        </form>
     </div>
 </div>
 
